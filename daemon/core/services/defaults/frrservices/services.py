@@ -33,7 +33,7 @@ def has_mtu_mismatch(iface: CoreInterface) -> bool:
         return True
     if not iface.net:
         return False
-    for iface in iface.net.get_ifaces():
+    for iface in iface.net.get_ifaces(control=False):
         if iface.mtu != iface.mtu:
             return True
     return False
@@ -47,7 +47,7 @@ def get_min_mtu(iface: CoreInterface) -> int:
     mtu = iface.mtu
     if not iface.net:
         return mtu
-    for iface in iface.net.get_ifaces():
+    for iface in iface.net.get_ifaces(control=False):
         if iface.mtu < mtu:
             mtu = iface.mtu
     return mtu
@@ -70,7 +70,7 @@ def rj45_check(iface: CoreInterface) -> bool:
     link.
     """
     if iface.net:
-        for peer_iface in iface.net.get_ifaces():
+        for peer_iface in iface.net.get_ifaces(control=False):
             if peer_iface == iface:
                 continue
             if isinstance(peer_iface.node, Rj45Node):
@@ -118,7 +118,7 @@ class FRRZebra(CoreService):
             services.append(service)
 
         ifaces = []
-        for iface in self.node.get_ifaces():
+        for iface in self.node.get_ifaces(control=False):
             ip4s = []
             ip6s = []
             for ip4 in iface.ip4s:
@@ -378,7 +378,7 @@ class FRRpimd(FrrService, CoreService):
 
     def frr_config(self) -> str:
         ifname = "eth0"
-        for iface in self.node.get_ifaces():
+        for iface in self.node.get_ifaces(control=False):
             if iface.name != "lo":
                 ifname = iface.name
                 break

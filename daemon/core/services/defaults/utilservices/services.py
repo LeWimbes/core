@@ -18,7 +18,7 @@ class DefaultRouteService(CoreService):
     def data(self) -> dict[str, Any]:
         # only add default routes for linked routing nodes
         routes = []
-        ifaces = self.node.get_ifaces()
+        ifaces = self.node.get_ifaces(control=False)
         if ifaces:
             iface = ifaces[0]
             for ip in iface.ips():
@@ -72,7 +72,7 @@ class IpForwardService(CoreService):
 
     def data(self) -> dict[str, Any]:
         devnames = []
-        for iface in self.node.get_ifaces():
+        for iface in self.node.get_ifaces(control=False):
             devname = utils.sysctl_devname(iface.name)
             devnames.append(devname)
         return dict(devnames=devnames)

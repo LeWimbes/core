@@ -17,7 +17,7 @@ class MgenSinkService(CoreService):
 
     def data(self) -> dict[str, Any]:
         ifnames = []
-        for iface in self.node.get_ifaces():
+        for iface in self.node.get_ifaces(control=False):
             name = utils.sysctl_devname(iface.name)
             ifnames.append(name)
         return dict(ifnames=ifnames)
