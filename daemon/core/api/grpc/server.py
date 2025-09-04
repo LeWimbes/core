@@ -488,7 +488,7 @@ class CoreGrpcServer(core_pb2_grpc.CoreApiServicer):
                     if key.startswith("beth"):
                         key = key.split(".")
                         node_id = _INTERFACE_REGEX.search(key[0]).group("node")
-                        node_id = int(node_id, base=16)
+                        node_id = int(node_id)
                         iface_id = int(key[1])
                         session_id = key[2]
                         if session.short_session_id() != session_id:

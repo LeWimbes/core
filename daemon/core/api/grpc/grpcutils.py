@@ -573,7 +573,7 @@ def parse_proc_net_dev(lines: list[str]) -> dict[str, dict[str, float]]:
     :return: parsed device to tx/rx values
     """
     stats = {}
-    for line in lines[2:]:
+    for line in lines:
         line = line.strip()
         if not line:
             continue
