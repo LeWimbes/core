@@ -18,10 +18,6 @@ class ThroughputDialog(Dialog):
     def __init__(self, app: "Application") -> None:
         super().__init__(app, "Throughput Config")
         self.manager: CanvasManager = app.manager
-        self.show_throughput: tk.IntVar = tk.IntVar(value=1)
-        self.exponential_weight: tk.IntVar = tk.IntVar(value=1)
-        self.transmission: tk.IntVar = tk.IntVar(value=1)
-        self.reception: tk.IntVar = tk.IntVar(value=1)
         self.threshold: tk.DoubleVar = tk.DoubleVar(
             value=self.manager.throughput_threshold
         )
@@ -32,27 +28,6 @@ class ThroughputDialog(Dialog):
         self.draw()
 
     def draw(self) -> None:
-        button = ttk.Checkbutton(
-            self.top,
-            variable=self.show_throughput,
-            text="Show Throughput Level On Every Link",
-        )
-        button.grid(sticky=tk.EW)
-        button = ttk.Checkbutton(
-            self.top,
-            variable=self.exponential_weight,
-            text="Use Exponential Weighted Moving Average",
-        )
-        button.grid(sticky=tk.EW)
-        button = ttk.Checkbutton(
-            self.top, variable=self.transmission, text="Include Transmissions"
-        )
-        button.grid(sticky=tk.EW)
-        button = ttk.Checkbutton(
-            self.top, variable=self.reception, text="Include Receptions"
-        )
-        button.grid(sticky=tk.EW)
-
         label_frame = ttk.LabelFrame(self.top, text="Link Highlight", padding=FRAME_PAD)
         label_frame.columnconfigure(0, weight=1)
         label_frame.grid(sticky=tk.EW)

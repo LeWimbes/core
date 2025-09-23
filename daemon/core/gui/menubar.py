@@ -112,9 +112,6 @@ class Menubar(tk.Menu):
         menu.add_command(label="Custom Nodes", command=self.click_custom_nodes)
         menu.add_command(label="Show Hidden Nodes", command=self.click_show_hidden)
         menu.add_separator()
-        menu.add_command(label="Undo", accelerator="Ctrl+Z", state=tk.DISABLED)
-        menu.add_command(label="Redo", accelerator="Ctrl+Y", state=tk.DISABLED)
-        menu.add_separator()
         menu.add_command(label="Cut", accelerator="Ctrl+X", command=self.click_cut)
         menu.add_command(label="Copy", accelerator="Ctrl+C", command=self.click_copy)
         menu.add_command(label="Paste", accelerator="Ctrl+V", command=self.click_paste)
@@ -219,18 +216,6 @@ class Menubar(tk.Menu):
         self.observers_menu = ObserversMenu(widget_menu, self.app)
         widget_menu.add_cascade(label="Observer Widgets", menu=self.observers_menu)
 
-    def create_adjacency_menu(self, widget_menu: tk.Menu) -> None:
-        """
-        Create adjacency menu item and the sub menu items inside
-        """
-        menu = tk.Menu(widget_menu)
-        menu.add_command(label="Configure Adjacency", state=tk.DISABLED)
-        menu.add_command(label="Enable OSPFv2?", state=tk.DISABLED)
-        menu.add_command(label="Enable OSPFv3?", state=tk.DISABLED)
-        menu.add_command(label="Enable OSLR?", state=tk.DISABLED)
-        menu.add_command(label="Enable OSLRv2?", state=tk.DISABLED)
-        widget_menu.add_cascade(label="Adjacency", menu=menu)
-
     def create_throughput_menu(self, widget_menu: tk.Menu) -> None:
         menu = tk.Menu(widget_menu)
         menu.add_command(
@@ -250,7 +235,6 @@ class Menubar(tk.Menu):
         menu = tk.Menu(self)
         menu.add_command(label="Node Commands", command=self.click_node_commands)
         self.create_observer_widgets_menu(menu)
-        self.create_adjacency_menu(menu)
         self.create_throughput_menu(menu)
         self.add_cascade(label="Widgets", menu=menu)
 
