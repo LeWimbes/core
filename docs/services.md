@@ -26,7 +26,6 @@ will allow quickly dragging and dropping that node type during creation.
 
 | Service Group                    | Services                                                              |
 |----------------------------------|-----------------------------------------------------------------------|
-| [BIRD](services/bird.md)         | BGP, OSPF, RADV, RIP, Static                                          |
 | [EMANE](services/emane.md)       | Transport Service                                                     |
 | [FRR](services/frr.md)           | BABEL, BGP, OSPFv2, OSPFv3, PIMD, RIP, RIPNG, Zebra                   |
 | [NRL](services/nrl.md)           | arouted, MGEN Sink, MGEN Actor, NHDP, OLSR, OLSRORG, OLSRv2, SMF      |

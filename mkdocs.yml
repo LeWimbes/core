@@ -60,7 +60,6 @@ nav:
       - Services:
           - Overview: services.md
           - Provided:
-              - Bird: services/bird.md
               - EMANE: services/emane.md
               - FRR: services/frr.md
               - NRL: services/nrl.md
