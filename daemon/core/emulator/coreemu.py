@@ -66,10 +66,12 @@ class CoreEmu:
         # load default services
         self.service_manager.load_locals()
         # load custom services
-        custom_dir = self.config.get("custom_services_dir")
-        if custom_dir is not None:
-            custom_dir = Path(custom_dir)
-            self.service_manager.load(custom_dir)
+        custom_dirs = self.config.get("custom_services_dir")
+        if custom_dirs is not None:
+            custom_dirs = custom_dirs.split(",")
+            for custom_dir in custom_dirs:
+                custom_dir = Path(custom_dir.strip())
+                self.service_manager.load(custom_dir)
 
     def _load_emane(self) -> None:
         """
