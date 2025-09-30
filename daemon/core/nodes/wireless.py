@@ -244,10 +244,11 @@ class WirelessNode(CoreNetworkBase):
         iface = link.iface
         has_netem = iface.has_netem
         iface.update_options(options1)
+        # reverse names to set configuration in other direction
         name, localname = iface.name, iface.localname
         iface.name, iface.localname = localname, name
         iface.has_netem = has_netem
-        iface.update_options(options2)
+        iface.update_options(options2, force=True)
         iface.name, iface.localname = name, localname
         if options1 == options2:
             link.label = f"{options1.loss:.2f}%/{options1.delay}us"

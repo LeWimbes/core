@@ -293,15 +293,19 @@ class CoreInterface:
         """
         return self.transport_type == TransportType.VIRTUAL
 
-    def update_options(self, options: LinkOptions) -> None:
+    def update_options(self, options: LinkOptions, force: bool = False) -> None:
         """
         Update the current link options, if a change occurred and the interface
         is up, update the running interface.
 
         :param options: link options to update with
+        :param force: force link changed
         :return: nothing
         """
-        changed = self.options.update(options)
+        if force:
+            changed = True
+        else:
+            changed = self.options.update(options)
         if self.up and changed:
             self.set_config()
 
