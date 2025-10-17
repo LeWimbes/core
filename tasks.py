@@ -306,6 +306,8 @@ def install_core_files(c, local=False, verbose=False, prefix=DEFAULT_PREFIX):
     c.run(f"sudo cp -r -n package/etc {CORE_PATH}", hide=hide)
     # install examples
     c.run(f"sudo cp -r package/share {CORE_PATH}", hide=hide)
+    # install scripts
+    c.run(f"sudo cp -r package/bin {CORE_PATH}", hide=hide)
 
 
 @task(

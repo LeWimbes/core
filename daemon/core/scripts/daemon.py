@@ -140,7 +140,12 @@ def main():
         "--grpc-address", dest="grpcaddress", help="override grpc address to listen on"
     )
     parser.add_argument(
-        "--ovs", action="store_true", help="enable experimental ovs mode"
+        "--ovs", action="store_true", help="(experimental) enable ovs mode"
+    )
+    parser.add_argument(
+        "--unshare",
+        action="store_true",
+        help="(experimental) enable node creation/cmd using unshare/netns",
     )
     args = parser.parse_args()
     # convert ovs to internal format

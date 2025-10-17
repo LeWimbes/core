@@ -127,6 +127,7 @@ class Session:
 
         # session options/metadata
         self.options: SessionConfig = SessionConfig(config)
+        self.use_unshare: bool = self.options.get_bool("unshare", False)
         self.metadata: dict[str, str] = {}
 
         # distributed support and logic

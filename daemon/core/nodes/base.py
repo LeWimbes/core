@@ -16,7 +16,7 @@ import netaddr
 from core import utils
 from core.emulator.data import InterfaceData, LinkOptions
 from core.errors import CoreCommandError, CoreError
-from core.executables import BASH, MOUNT, TEST, VCMD, VNODED
+from core.executables import BASH, MKNODE, MOUNT, NSENTER, TEST, VCMD, VNODED
 from core.nodes.interface import DEFAULT_MTU, CoreInterface
 from core.nodes.netclient import LinuxNetClient, get_net_client
 from core.services.dependencies import ServiceDependencies
@@ -584,6 +584,7 @@ class CoreNode(CoreNodeBase):
         super().__init__(session, _id, name, server, options)
         self.directory: Path | None = options.directory
         self.ctrlchnlname: Path = self.session.directory / self.name
+        self.unshare_pid: int | None = None
         self.pid: int | None = None
         self._mounts: list[tuple[Path, Path]] = []
         options = options or CoreNodeOptions()
@@ -632,18 +633,29 @@ class CoreNode(CoreNodeBase):
             self.makenodedir()
             if self.up:
                 raise ValueError("starting a node that is already up")
-            # create a new namespace for this node using vnoded
-            vnoded = (
-                f"{VNODED} -v -c {self.ctrlchnlname} -l {self.ctrlchnlname}.log "
-                f"-p {self.ctrlchnlname}.pid"
-            )
-            if self.directory:
-                vnoded += f" -C {self.directory}"
+
+            # create environment values
             env = self.session.get_environment(state=False)
             env["NODE_NUMBER"] = str(self.id)
             env["NODE_NAME"] = str(self.name)
-            output = self.host_cmd(vnoded, env=env)
-            self.pid = int(output)
+
+            if self.session.use_unshare:
+                # create container
+                output = self.host_cmd(MKNODE, env=env)
+                unshare_pid, child_pid = output.split(",")
+                self.unshare_pid = int(unshare_pid)
+                self.pid = int(child_pid)
+                self.cmd("mount -t sysfs none /sys")
+            else:
+                # create a new namespace for this node using vnoded
+                vnoded = (
+                    f"{VNODED} -v -c {self.ctrlchnlname} -l {self.ctrlchnlname}.log "
+                    f"-p {self.ctrlchnlname}.pid"
+                )
+                if self.directory:
+                    vnoded += f" -C {self.directory}"
+                output = self.host_cmd(vnoded, env=env)
+                self.pid = int(output)
             logger.debug("node(%s) pid: %s", self.name, self.pid)
             # bring up the loopback interface
             logger.debug("bringing up loopback interface")
@@ -682,6 +694,8 @@ class CoreNode(CoreNodeBase):
                 # kill node process if present
                 try:
                     self.host_cmd(f"kill -9 {self.pid}")
+                    if self.session.use_unshare:
+                        self.host_cmd(f"kill -9 {self.unshare_pid}")
                 except CoreCommandError:
                     logger.exception("error killing process")
                 # remove node directory if present
@@ -707,7 +721,12 @@ class CoreNode(CoreNodeBase):
         """
         if shell:
             args = f"{BASH} -c {shlex.quote(args)}"
-        return f"{VCMD} -c {self.ctrlchnlname} -- {args}"
+        if self.session.use_unshare:
+            return (
+                f"{NSENTER} -m -u -i -n -p --wd={self.directory} -t {self.pid} {args}"
+            )
+        else:
+            return f"{VCMD} -c {self.ctrlchnlname} -- {args}"
 
     def cmd(self, args: str, wait: bool = True, shell: bool = False) -> str:
         """

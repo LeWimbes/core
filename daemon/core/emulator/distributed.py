@@ -137,7 +137,10 @@ class DistributedController:
         :raises CoreError: when there is an error validating server
         """
         server = DistributedServer(name, host)
-        for requirement in get_requirements(self.session.use_ovs()):
+        requirements = get_requirements(
+            self.session.use_ovs(), self.session.use_unshare
+        )
+        for requirement in requirements:
             try:
                 server.remote_cmd(f"which {requirement}")
             except CoreCommandError:

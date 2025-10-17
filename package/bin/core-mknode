@@ -1,0 +1,9 @@
+#!/bin/env sh
+unshare -m -u -i -n -p -f --mount-proc tail -f /dev/null > /dev/null 2>&1 &
+UNSHARE_PID=$!
+CHILD_PID=""
+while [ -z "${CHILD_PID}" ]; do
+  CHILD_PID=$(pgrep -P ${UNSHARE_PID})
+  sleep 0.1
+done
+echo ${UNSHARE_PID},${CHILD_PID}

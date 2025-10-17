@@ -54,7 +54,8 @@ class CoreEmu:
         :raises core.errors.CoreError: when an executable does not exist on path
         """
         use_ovs = self.config.get("ovs") == "1"
-        for requirement in get_requirements(use_ovs):
+        use_unshare = self.config.get("unshare", "false").lower() == "true"
+        for requirement in get_requirements(use_ovs, use_unshare):
             utils.which(requirement, required=True)
 
     def _load_services(self) -> None:
