@@ -56,7 +56,7 @@ RUN dnf update -y && \
 # install core
 ARG CORE_VERSION=9.2.1
 ARG CORE_PACKAGE=core_${CORE_VERSION}_x86_64.rpm
-ARG PACKAGE_URL=https://github.com/coreemu/core/releases/download/release-${CORE_VERSION}/${CORE_PACKAGE}
+ARG PACKAGE_URL=https://github.com/LeWimbes/core/releases/download/release-${CORE_VERSION}/${CORE_PACKAGE}
 RUN dnf update -y && \
     wget -q ${PACKAGE_URL} && \
     PYTHON=$(uv python find ${PYTHON_VERSION}) dnf install -y ./${CORE_PACKAGE} && \

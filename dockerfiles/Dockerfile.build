@@ -39,7 +39,7 @@ RUN uv python install ${PYTHON_VERSION} && \
 
 # clone and build core
 ARG BRANCH=master
-RUN git clone https://github.com/coreemu/core.git && \
+RUN git clone https://github.com/LeWimbes/core.git && \
     cd core && \
     git checkout ${BRANCH} && \
     uv venv --python ${PYTHON_VERSION} venv && \
